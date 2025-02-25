@@ -1,0 +1,48 @@
+# General IDE files
+.idea/
+*.iml
+
+# CLion CMake build directories
+cmake-build-*/
+
+# CMake generated files
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+compile_commands.json
+
+# Build artifacts
+bin/
+obj/
+*.o
+*.a
+*.so
+*.exe
+*.dll
+*.dylib
+
+# Editor-specific files
+*.swp
+*.swo
+
+# Dependency directories
+external/
+.vcpkg/
+Dependencies/
+
+# Logs and debug files
+*.log
+*.gch
+*.pch
+*.lprof
+
+# User-specific settings
+*.user
+*.session
+*.sublime-workspace
+
+# Resource files
+Resources/
+/commitALL.py
