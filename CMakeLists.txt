@@ -5,15 +5,14 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(ENGINE_VERSION_MAJOR 0)
 set(ENGINE_VERSION_MINOR 0)
-set(ENGINE_VERSION_PATCH 8)
+set(ENGINE_VERSION_PATCH 0)
 
-# Убедитесь, что пути указаны правильно
-set(SDL3_DIR "C:/Users/IDKTHIS/Desktop/SimpleVoxelEngine/Dependencies/SDL3")
-set(GLEW_DIR "C:/Users/IDKTHIS/Desktop/SimpleVoxelEngine/Dependencies/Glew")
-set(GLM_DIR "C:/Users/IDKTHIS/Desktop/SimpleVoxelEngine/Dependencies/GLM")
-set(STB_DIR "C:/Users/IDKTHIS/Desktop/SimpleVoxelEngine/Dependencies/stb_image")
-set(JSON_DIR "C:/Users/IDKTHIS/Desktop/SimpleVoxelEngine/Dependencies/JSON")
-set(IMGUI_DIR "C:/Users/IDKTHIS/Desktop/SimpleVoxelEngine/Dependencies/ImGui")
+set(SDL3_DIR "C:/Users/IDKTHIS/Desktop/SimpleCraft/Dependencies/SDL3")
+set(GLEW_DIR "C:/Users/IDKTHIS/Desktop/SimpleCraft/Dependencies/Glew")
+set(GLM_DIR "C:/Users/IDKTHIS/Desktop/SimpleCraft/Dependencies/GLM")
+set(STB_DIR "C:/Users/IDKTHIS/Desktop/SimpleCraft/Dependencies/stb_image")
+set(JSON_DIR "C:/Users/IDKTHIS/Desktop/SimpleCraft/Dependencies/JSON")
+set(IMGUI_DIR "C:/Users/IDKTHIS/Desktop/SimpleCraft/Dependencies/ImGui")
 
 find_path(SDL3_INCLUDE_DIR SDL3/SDL.h PATHS ${SDL3_DIR}/include)
 find_path(GLM_INCLUDE_DIR glm/glm.hpp PATHS ${GLM_DIR}/include)
@@ -27,7 +26,6 @@ set(SDL3_DLL "${SDL3_DIR}/lib/x64/SDL3.dll")
 find_path(GLEW_INCLUDE_DIR GL/glew.h PATHS ${GLEW_DIR}/include)
 set(GLEW_LIB "${GLEW_DIR}/lib/Release/x64/glew32s.lib")
 
-# Добавляем исходники ImGui с поддержкой SDL3 и OpenGL3
 set(IMGUI_SRC
         ${IMGUI_INCLUDE_DIR}/imgui.cpp
         ${IMGUI_INCLUDE_DIR}/imgui_demo.cpp
@@ -38,10 +36,8 @@ set(IMGUI_SRC
         ${IMGUI_INCLUDE_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
-# Создаём статическую библиотеку ImGui
 add_library(imgui STATIC ${IMGUI_SRC})
 
-# Указываем зависимости для ImGui
 target_include_directories(imgui PRIVATE
         ${IMGUI_INCLUDE_DIR}
         ${SDL3_INCLUDE_DIR}
@@ -49,7 +45,6 @@ target_include_directories(imgui PRIVATE
 )
 target_link_libraries(imgui PRIVATE ${SDL3_LIB})
 
-# Основной исполняемый файл
 add_executable(SimpleVoxelEngine
         EntryPoint.cpp
         Engine/Application.cpp
@@ -73,9 +68,10 @@ add_executable(SimpleVoxelEngine
         Engine/Core/SubSystems/Console/SimpleConsole.cpp
         Engine/Core/SubSystems/Console/SimpleConsole.h
         Engine/Core/SubSystems/CommandLineParse/CommandLineParse.h
+        Game/SimpleCraft.cpp
+        Game/SimpleCraft.h
 )
 
-# Подключаем заголовочные файлы
 target_include_directories(SimpleVoxelEngine PRIVATE
         ${CMAKE_SOURCE_DIR}
         ${SDL3_INCLUDE_DIR}
@@ -86,7 +82,6 @@ target_include_directories(SimpleVoxelEngine PRIVATE
         ${IMGUI_INCLUDE_DIR}
 )
 
-# Линкуем зависимости
 target_link_libraries(SimpleVoxelEngine PRIVATE
         ${GLEW_LIB}
         opengl32
@@ -94,7 +89,6 @@ target_link_libraries(SimpleVoxelEngine PRIVATE
         imgui
 )
 
-# Добавляем системные библиотеки, необходимые для SDL3 в Windows
 if(WIN32)
     target_link_libraries(SimpleVoxelEngine PRIVATE
             user32.lib
@@ -106,12 +100,10 @@ if(WIN32)
     )
 endif()
 
-# Копируем DLL файл SDL3
 add_custom_command(TARGET SimpleVoxelEngine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         ${SDL3_DLL} $<TARGET_FILE_DIR:SimpleVoxelEngine>
 )
 
-# Версия движка
 set(ENGINE_VERSION "${ENGINE_VERSION_MAJOR}.${ENGINE_VERSION_MINOR}.${ENGINE_VERSION_PATCH}")
 add_definitions(-DENGINE_VERSION="${ENGINE_VERSION}")
